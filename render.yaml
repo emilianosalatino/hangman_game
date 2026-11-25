@@ -1,0 +1,32 @@
+# Blueprint de Render para "El Ahorcado".
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Cómo usarlo:
+#   1. Sube este proyecto a un repo de GitHub/GitLab.
+#   2. En Render: New -> Blueprint -> elige el repo.
+#   3. Render detecta este render.yaml y crea el Web Service automáticamente.
+#
+# También puedes crear el servicio a mano (ver README/instrucciones):
+#   - Tipo: Web Service
+#   - Runtime: Node (versión 20+)
+#   - Build Command:  npm install && npm run build
+#   - Start Command:  node .next/standalone/server.js
+
+services:
+  - type: web
+    name: ahorcado
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node .next/standalone/server.js
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # El juego no usa base de datos, pero el scaffold incluye Prisma/SQLite.
+      # Le damos un valor para que "prisma generate" (postinstall) no falle.
+      - key: DATABASE_URL
+        value: file:./prisma/dev.db
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
